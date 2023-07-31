@@ -1,9 +1,10 @@
-package com.hsh.myapp.configuration;
+package com.tje.controller.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -19,7 +20,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     // 서버쪽에서 접근 가능한 origin 목록, 경로목록, 멤서드 목록을 설정해주어야함.
 
     @Override
-    public void addCorsMappings(@org.jetbrains.annotations.NotNull CorsRegistry registry) {
+    public void addCorsMappings(CorsRegistry registry) {
         registry
                 .addMapping("/**") // 모든 경로에 대해
                 .allowedOrigins(

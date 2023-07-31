@@ -1,4 +1,4 @@
-package com.hsh.myapp.contact;
+package com.tje.controller.contact;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

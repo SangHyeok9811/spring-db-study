@@ -1,4 +1,4 @@
-package com.hsh.myapp.account;
+package com.tje.controller.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
