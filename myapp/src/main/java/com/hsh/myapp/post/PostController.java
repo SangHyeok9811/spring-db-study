@@ -78,10 +78,13 @@ public class PostController {
         }
 
     // 2. 채번: 번호를 딴다(1 .. 2, 3....)
+        // 데이터베이스의 auto_increment를 사용할 것이므로
+        // 아래 2줄은 필요없게 된다.
         long no = num.incrementAndGet();
+        p.setNo(no);
+
     // 3. 번호(no), 시간값(createdTime) 게시자이름(creatorName) 요청 객체에 설정
     // (set필드명(...))
-        p.setNo(no);
         p.setCreatedTime(new Date().getTime());
         p.setCreatorName("홍길동");
     // 4. 맵에 추가 (서버에서 생성된 값을 설정)
