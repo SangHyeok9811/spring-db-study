@@ -1,5 +1,6 @@
 package com.hsh.myapp.contact;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -181,4 +182,43 @@ public class B {
         repo.deleteById(email);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    // PUT(전체수정), PATCH(일부수정)
+    // PUT /hong@gmail.com
+    // {"none":"길동","phone":"010..."}
+
+    @PutMapping(value = "/{email}")
+    public ResponseEntity modifyContact
+            (@PathVariable String email, @RequestBody ContactModifyRequest contact){
+        System.out.println(email);
+        System.out.println(contact);
+
+        // 1. 키값으로 조회해옴
+        Optional<Contact> findedContact = repo.findById(email);
+
+        // 2. 해당 레코드가 있는지 확인
+        if(!findedContact.isPresent()) {
+            // 404:NOT FOUND, 해당 경로에 리소스가 없다.
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        //존재하는 레코드(키값, @Id값이 존재)
+        Contact toModifyContact = findedContact.get();
+        // 3. 조회해온 레코드에 필드값을 수정
+        // 매개변수에 name값이 있으면 수정
+        if(contact.getName() != null && !contact.getName().isEmpty()) {
+            toModifyContact.setName(contact.getName());
+        }
+        // 매개변수에 phone값이 있으면 수정
+        if(contact.getPhone() != null && !contact.getPhone().isEmpty()) {
+            toModifyContact.setPhone(contact.getPhone());
+        }
+
+        // (@Id 값이 존재하므로 update를 시도)
+        repo.save(toModifyContact);
+
+        // 200 OK 처리
+        return ResponseEntity.ok().build();
+    }
 }
+

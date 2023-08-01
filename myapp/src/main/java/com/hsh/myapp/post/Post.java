@@ -32,4 +32,5 @@ public class Post {
 
     // 데이터베이스에 NULL을 넣고 싶으면 Class 타입을 써야함
     private Long createdTime;
+    private String image;
 }

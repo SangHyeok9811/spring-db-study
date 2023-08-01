@@ -44,6 +44,7 @@ public class Contact {
 
     // 컬럼의 데이터 타입을 변경
 //    @Column(columnDefinition = "LONGTEXT") // mySQL 전용 방법
+
     // 컬럼크기 1024byte * 1024 = 1mb * 20 = 20mb
     @Column(length = 1024 * 1024 * 20) // mySQL에서는 longtext로 바뀜
     // 파일을 base64 data-url 문자열로 저장
