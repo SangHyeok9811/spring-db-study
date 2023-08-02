@@ -22,7 +22,7 @@ public class Post {
     private long no;
     private String title;
     private String content;
-    private String creatorName; // 서버에서 아무나
+    private String creatorName;
 
     // created_time bigint not null
     // primitive type: int, char, long, double

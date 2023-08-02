@@ -2,7 +2,10 @@ package com.hsh.myapp.contact;
 
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -84,10 +87,71 @@ public class B {
         // repo.findAll(Sort sort); 정렬하여 전체 테이블 목록 조회
         // SELECT * FROM 테이블 ORDER BY 정렬컬럼, 정렬컬럼...
 
-        List<Contact> list = repo.findAll(Sort.by("name").ascending());
+//        List<Contact> list = repo.findAll(Sort.by("name").ascending());
+//        return list;
+
+        // repository query creation을 이용한 방법
+        List<Contact> list = repo.findAllByOrderByName();
         return list;
     }
 
+    // GET /contacts/paging?page=0&size=10
+    // query-string으로 받을 것임
+    // ?키=값&키=값....
+    // @RequestParam
+    // quer-string 값을 매개변수 받는 어노테이션
+
+    @GetMapping(value="/paging")
+    public Page<Contact> getContactsPaging
+            (@RequestParam int page, @RequestParam int size){
+        System.out.println(page);
+        System.out.println(size);
+
+        // 기본적으로 key 정렬(default)
+        // SQL: ORDER BY email DESC
+        // 정렬 매개변수 객체
+        Sort sort = Sort.by("email").descending();
+        // 페이지 매개변수 객체
+        // SQL: OFFSET page = size Limit size
+        // OFFSET: 어떤 기준점에 대한 거리
+        // OFFSET 10: 10번째까지 이후(10건을 건너뛴다)
+        // LIMIT 10: 10건의 레코드를 조회
+        // LIMIT 10 OFFSET 10: 앞으로 10건을 건너뛰고 다음 10건을 조회
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+        return repo.findAll(pageRequest);
+    }
+
+    // GET /contacts/paging/searchByName?page=0&size=10&name=hong
+    @GetMapping(value="/paging/searchByName")
+    public Page<Contact> getContactsPagingSearchName(@RequestParam int page, @RequestParam int size, @RequestParam String name){
+        System.out.println(page);   // 매개변수 받고있는지 확인
+        System.out.println(size);
+        System.out.println(name);
+
+        // 기본적으로 key 정렬(default)
+        Sort sort = Sort.by("email").descending();
+        // 페이지 매개변수 객체
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+        return repo.findByNameContaining(name, pageRequest);
+    }
+
+    // GET /contacts/paging/searchByName?page=0&size=10&name=hong
+    @GetMapping(value="/paging/search")
+    public Page<Contact> getContactsPagingSearch(@RequestParam int page, @RequestParam int size, @RequestParam String query){
+        // 기본적으로 key 정렬(default)
+        System.out.println(page);   // 매개변수 받고있는지 확인
+        System.out.println(size);
+        System.out.println(query);
+
+        Sort sort = Sort.by("email").descending();
+
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+
+        return repo.findByNameContainsOrPhoneContains(query, query, pageRequest);
+    }
 
     @PostMapping
     public ResponseEntity<Map<String, Object>> addContact(@RequestBody Contact contact) {
@@ -147,7 +211,7 @@ public class B {
         // Optional은 null이 될 수 없음
         Optional<Contact> savedContact = repo.findById(contact.getEmail());
         //레코드가 존재하는지 여부
-        if(savedContact.isPresent()){
+        if(savedContact.isPresent()){   // 값이 있을경우 true, 없으면 false
             Map<String, Object> res = new HashMap<>();
             res.put("data", savedContact);
             res.put("message", "created");
