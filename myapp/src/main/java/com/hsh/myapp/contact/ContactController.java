@@ -23,10 +23,10 @@ public class ContactController {
 //    Map<String, Contact> map = new ConcurrentHashMap<>();
 
     // @Autowired: Bean 객체를 의존성 주입
-    // Bean 객체: @Configuration 클래스에 등록된 싱글턴 클래스로 생성된 객체
+    // Bean 객체: @Configuration 클래스에 등록된 싱글턴 클래스로 생성된 객체(스프링에서는 자바 객체를 bean이라고함)
 
     // 싱글턴: 첫 실행시점 객체가 1번 생성됨. 이후 부터는 생성된 객체를 재사용
-    // static: JVM 실행 시점에 객체를 생성
+    // static: JVM 실행 시점에 객체를 생성 // 인스턴스를 생성하지않아도 클래스 내의 멤버들을 사용 가능
 
     // @Configuration 클래스에 Bean 객체를 선언
     // 메서드의 반환 타입이 싱글턴 클래스
@@ -73,7 +73,9 @@ public class B {
  */
 
     @Autowired
-    ContactRepository repo;
+    ContactRepository repo; 
+    // ContactRepository 인터페이스에 의존성을 가진다.
+    // 그 의존성을 repo가 부여함. repo를 통해 ContactRepository extends JpaRepository<Contact, String>의 메서드를 사용 가능
 
 //    @Autowired
 //    public ContactController(ContactRepository r) {
@@ -99,7 +101,7 @@ public class B {
     // query-string으로 받을 것임
     // ?키=값&키=값....
     // @RequestParam
-    // quer-string 값을 매개변수 받는 어노테이션
+    // query-string 값을 매개변수 받는 어노테이션
 
     @GetMapping(value="/paging")
     public Page<Contact> getContactsPaging
@@ -124,7 +126,7 @@ public class B {
 
     // GET /contacts/paging/searchByName?page=0&size=10&name=hong
     @GetMapping(value="/paging/searchByName")
-    public Page<Contact> getContactsPagingSearchName(@RequestParam int page, @RequestParam int size, @RequestParam String name){
+    public Page<Contact> getContactsPagingSearchName(@RequestParam int page, @RequestParam int size, @RequestParam String name){    // string name은 검색할 이름
         System.out.println(page);   // 매개변수 받고있는지 확인
         System.out.println(size);
         System.out.println(name);
@@ -134,7 +136,7 @@ public class B {
         // 페이지 매개변수 객체
         PageRequest pageRequest = PageRequest.of(page, size, sort);
 
-        return repo.findByNameContaining(name, pageRequest);
+        return repo.findByNameContaining(name, pageRequest);    // 여기서 name은 인터페이스에 정의된 메서드에서 name을 매개변수로 받아서 검색을 한다는 뜻. 그리고 그 검색결과가 pageRequest로 반환.
     }
 
     // GET /contacts/paging/searchByName?page=0&size=10&name=hong
@@ -150,7 +152,7 @@ public class B {
         PageRequest pageRequest = PageRequest.of(page, size, sort);
 
 
-        return repo.findByNameContainsOrPhoneContains(query, query, pageRequest);
+        return repo.findByNameContainsOrPhoneContains(query, query, pageRequest);   // 여기서 쿼리 2개는 검색할 매개변수 2개 이메일이랑 전화번호
     }
 
     @PostMapping

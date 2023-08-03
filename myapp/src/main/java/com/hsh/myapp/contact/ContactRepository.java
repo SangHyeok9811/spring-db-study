@@ -29,7 +29,7 @@ public interface ContactRepository extends JpaRepository<Contact, String> {
     @Query(value = "select * " +
             "from contact " +
             "where email = :email", nativeQuery = true)
-    Optional<Contact> findContactByEmail(String email);
+    Optional<Contact> findContactByEmail(String email); // 조회결과가 없을수도 있으므로 optional 지정
 
     // Query Creation
     // https://docs.spring.io/spring-data/jpa/docs/1.6.0.RELEASE/reference/html/jpa.repositories.html
