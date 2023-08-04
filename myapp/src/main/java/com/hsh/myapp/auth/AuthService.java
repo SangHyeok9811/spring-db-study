@@ -1,5 +1,11 @@
 package com.hsh.myapp.auth;
 
+import com.hsh.myapp.auth.entity.Login;
+import com.hsh.myapp.auth.entity.LoginRepository;
+import com.hsh.myapp.auth.entity.Profile;
+import com.hsh.myapp.auth.entity.ProfileRepository;
+import com.hsh.myapp.auth.request.SignupRequest;
+import com.hsh.myapp.auth.util.HashUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +15,9 @@ public class AuthService {
 
     private LoginRepository repo;
     private ProfileRepository profileRepo;
+
+    @Autowired  // 의존성주입
+    private HashUtil hash;
 
     @Autowired
     public AuthService(LoginRepository repo, ProfileRepository profileRepo) {
@@ -38,13 +47,13 @@ public class AuthService {
 
     @Transactional
     public long createIdentity(SignupRequest req) {
-        HashUtil util = new HashUtil();
+//        HashUtil util = new HashUtil();
 
         // 1. login 정보를 insert
         Login toSaveLogin =
                 Login.builder()
                         .username(req.getUsername())
-                        .password(util.createHash(req.getPassword()))
+                        .secret(hash.createHash(req.getPassword())) // 의존성주입된 hash
                         .build();
         Login savedLogin = repo.save(toSaveLogin);
 

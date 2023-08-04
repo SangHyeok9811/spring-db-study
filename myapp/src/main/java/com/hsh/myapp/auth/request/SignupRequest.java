@@ -1,4 +1,4 @@
-package com.hsh.myapp.auth;
+package com.hsh.myapp.auth.request;
 
 import jakarta.persistence.Column;
 import lombok.Data;
