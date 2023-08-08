@@ -40,13 +40,13 @@ public class AuthController {
     @Autowired
     private JwtUtil jwt;
 
-//    @GetMapping(value = "/logins")
-//    public List<Login> getLogins() {
-//        return repo.findAll();
-//    }
+    @GetMapping(value = "/logins")
+    public List<Login> getLogins() {
+        return repo.findAll();
+    }
 
 
-    @PostMapping(value = "/signup")
+    @PostMapping(value = "/signup") // 계정 추가
     public ResponseEntity signUp(@RequestBody SignupRequest req) {
         System.out.println(req);
 
@@ -135,6 +135,8 @@ public class AuthController {
 //        res.setHeader("Location", "httpsL//localhost:5500");
 //        res.setStatus(HttpStatus.FOUND.value());
 
+
+        // 인증토큰 발급.
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .location(ServletUriComponentsBuilder
