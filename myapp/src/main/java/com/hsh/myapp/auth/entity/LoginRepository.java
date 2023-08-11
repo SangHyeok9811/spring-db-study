@@ -10,5 +10,4 @@ public interface LoginRepository  extends JpaRepository<Login, Long> {
     // 1건이거나 없거나
     // Optional.isPresent()
     Optional<Login> findByUsername(String username);
-
 }

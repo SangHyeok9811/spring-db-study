@@ -16,7 +16,7 @@ public class AuthService {
     private LoginRepository repo;
     private ProfileRepository profileRepo;
 
-    @Autowired  // 의존성주입
+    @Autowired
     private HashUtil hash;
 
     @Autowired
@@ -47,13 +47,11 @@ public class AuthService {
 
     @Transactional
     public long createIdentity(SignupRequest req) {
-//        HashUtil util = new HashUtil();
-
         // 1. login 정보를 insert
         Login toSaveLogin =
                 Login.builder()
                         .username(req.getUsername())
-                        .secret(hash.createHash(req.getPassword())) // 의존성주입된 hash
+                        .secret(hash.createHash(req.getPassword()))
                         .build();
         Login savedLogin = repo.save(toSaveLogin);
 
