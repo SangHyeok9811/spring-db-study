@@ -22,7 +22,7 @@ public class Post {
     private long no;
     private String title;
     private String content;
-    private String creatorName;
+    private String creatorName; // 서버에서 아무나
 
     // created_time bigint not null
     // primitive type: int, char, long, double
@@ -32,5 +32,4 @@ public class Post {
 
     // 데이터베이스에 NULL을 넣고 싶으면 Class 타입을 써야함
     private Long createdTime;
-    private String image;
 }
